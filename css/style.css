@@ -22,7 +22,7 @@ main{
     background: linear-gradient(to top left, #65e49c, #65e4af);
     color: #ffffff;
     text-decoration: none;
-    max-width: 150px;
+    max-width: 250px;
     border-radius: 3px;
     text-align: center;
     font-size: 18px;
@@ -59,4 +59,9 @@ main{
 }
 .good-item__btn{
 
+}
+
+.sum{
+    margin-top: 50px;
+    font-size: 42px;
 }
