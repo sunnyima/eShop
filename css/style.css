@@ -29,6 +29,7 @@ main{
     padding: 10px 10px;
     letter-spacing: 0.7px;
     box-shadow: 0 -2px #b2f1be inset;
+    margin: 10px;
 }
 .cart-button{
     margin-right: 1%;

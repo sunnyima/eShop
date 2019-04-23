@@ -11,7 +11,7 @@ class GoodsItem{
                                                 <h3 class="good-item__title">${this.product_name}</h3>
                                                 <img class="good-item__img" src="img/sample.jpg" alt="good image"/>
                                                 <p class="good-item__price">${this.price}</p>
-                                                <button class="good-item__btn green-button" onclick="cartList.addGood(${this.id_product})">В корзину</button>
+                                                <button class="good-item__btn green-button addCartButton" onclick="cartList.addGood(${this.id_product})">В корзину</button>
                                              </div>`;
     }
 }
@@ -22,6 +22,7 @@ class GoodsList{
 
     constructor(){
         this.goods = [];
+        this.filteredGoods = [];
     }
     fetchGoods(cb) {
         makeGETRequest(`${API_URL}/catalogData.json`)
@@ -29,6 +30,7 @@ class GoodsList{
                 response =>
                 {
                     this.goods = JSON.parse(response);
+                    this.filteredGoods =JSON.parse(response);
                     this.render();
                     cb();
                 },
@@ -37,11 +39,16 @@ class GoodsList{
     }
     render(){
         let goodsList = '';
-        this.goods.forEach( good =>{
+        this.filteredGoods.forEach( good =>{
             const goodItem = new GoodsItem(good.product_name, good.price, good.id_product);
             goodsList += goodItem.render();
         });
         document.querySelector('.goods-list').innerHTML = goodsList;
+    }
+    filterGoods(value){
+        const regexp = new RegExp(value, 'i');
+        this.filteredGoods = this.goods.filter(good => regexp.test(good.product_name));
+        this.render();
     }
     getSumPrice(){
         let sumPrice = 0;
@@ -87,10 +94,18 @@ class CartGoodsList {
     addGood(goodId){
         const idx = this.goodsList.findIndex(x => x.id_product === goodId);
         if (idx != -1) {
-            const idy = this.cartList.findIndex(x => x.good.id_product === goodId);
-            if (idy != -1) {
-                this.cartList[idy].count +=1;
-                this.cartList[idy].price = this.cartList[idy].count*this.cartList[idy].good.price;
+            if(this.cartList.length >0) {
+                const idy = this.cartList.findIndex(x => x.good.id_product === goodId);
+                if (idy != -1) {
+                    this.cartList[idy].count += 1;
+                    this.cartList[idy].price = this.cartList[idy].count * this.cartList[idy].good.price;
+                } else {
+                    this.cartList.push({
+                        'good': this.goodsList[idx],
+                        'count': 1,
+                        'price': this.goodsList[idx].price
+                    });
+                }
             }
             else {
                 this.cartList.push({
