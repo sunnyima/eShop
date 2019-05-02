@@ -7,9 +7,12 @@ let app = new Vue ({
     data: {
         catalogUrl: '/catalogData.json',
         products: [],
-        filteredProducts : [],
-        cartProducts : [],
-        imgCatalog: 'http://placehold.it/250x150'
+        filtered : [],
+        cartItems : [],
+        imgCatalog: 'http://placehold.it/250x150',
+        showCart : false,
+        cartUrl: 'getBasket.json',
+        userSearch :''
     },
     methods: {
         getJson (url) {
@@ -21,14 +24,29 @@ let app = new Vue ({
                 })
         },
         addProduct (product) {
-            console.log (product.id_product);
+            this.getJson(`${API}/addToBasket.json`)
+                .then(data =>{
+                    if(data.result) {
+                        let find = this.cartItems.find(el => el.id_product === product.id_product)
+                        if(find){
+                            find.quantity++;
+                        }
+                        else{
+                            let prod = Object.assign({quantity : 1}, product);
+                            this.cartItems.push(prod);
+                            this.showCart = false;
+                        }
+
+                    }
+                });
         },
-        delProduct (product){
+        deleteProduct (product){
            console.log(product.id_product);
+            this.showCart = false;
         },
-        filterGoods(value) {
-            const regExp = new RegExp(value, 'i');
-            this.filteredProducts = this.products.filter(product => regExp.test(product.product_name))
+        filterGoods() {
+            const regExp = new RegExp(this.userSearch, 'i');
+            this.filtered = this.products.filter(product => regExp.test(product.product_name))
         }
     },
     mounted () {
@@ -36,7 +54,7 @@ let app = new Vue ({
             .then (data => {
                 for (let el of data) {
                     this.products.push (el);
-                    this.filteredProducts.push (el);
+                    this.filtered.push (el);
                 }
 
             });
