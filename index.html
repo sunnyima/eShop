@@ -21,55 +21,33 @@
     <header>
     	<!--КОРЗИНА-->
         <div class="dropdown mydropdown">
-            <form action="#" class="search-form" @submit.prevent = 'filterGoods'>
-                <input id="searchInput" class="search-input" type="text" v-model="userSearch" >
-                <button class="search-button" type="submit" id="searchButton">Найти</button>
-            </form>
+            <filter-products
+                        @filter-goods = "filterGoods"
+            ></filter-products>
+
             <button class="cart-button dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false" @click="showCart">Корзина</button>
-            <div class="dropdown-menu cart-block" aria-labelledby="dropdownMenuButton" v-show="showCart = !showCart">
-                <p class="dropdown-item" href="#" v-if="cartItems.length === 0">Ваша корзина пуста</p>
-                <div class="basket" v-else="cartItems.length > 0">
-                    <div class="cart-products">
-                        <div class="cart-product-item" v-for="product of cartItems" :key="product.id_product">
-                            <div class="product-bio">
-                                <img :src="imgCatalog" alt="some image">
-                                <div class="product-desc">
-                                    <p class="product-title"> {{ product.product_name }} </p>
-                                    <p class="product-quantity"> {{ product.quantity }} </p>
-                                    <p class="product-single-price"> $ {{ product.price }} each</p>
-                                </div>
-                            </div>
-                            <div class="right-block">
-                                <p class="product-price"> {{product.quantity*product.price}}</p>
-                                <button class="addButton" @click="addProduct (product)">Добавить</button>
-                                <button class="removeButton" @click="deleteProduct (product)">Удалить</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                aria-haspopup="true" aria-expanded="false" @click="showCart = !showCart">Корзина</button>
+
+            <cart class="dropdown-menu cart-block" aria-labelledby="dropdownMenuButton"
+                    :cart-items="cartItems"
+                    :img="imgCart"
+                    :visibility="showCart"
+                    @add-product="addProduct"
+                    @delete-product="deleteProduct"></cart>
         </div>
     </header>
 
     <main>
-    	<!--ЗАГРУЗКА ТОВАРОВ-->
-        <div class="products">
-            
-            <div class="product-item" v-for="product of filtered" :key="product.id_product">
-                <img :src="imgCatalog" alt="">
-                <div class="desc">
-                    <h3> {{ product.product_name }} </h3>
-                    <p> {{ product.price }} </p>
-                    <button class="addButton" @click="addProduct (product)">Купить</button>
-                </div>
-            </div>
-
-        </div>
+        <products :products="filtered" :img="imgCatalog" @add-product="addProduct"></products>
+        <show-error ref="error"></show-error>
     </main>
 </div>
     
     <script src="js/vue.js"></script>
+    <script src="js/cartComponent.js"></script>
+    <script src="js/prodComponent.js"></script>
+    <script src="js/filterComponent.js"></script>
+    <script src="js/errorComponent.js"></script>
     <script src="js/script.js"></script> <!--ОСНОВНОЙ СКРИПТ-->
 
 

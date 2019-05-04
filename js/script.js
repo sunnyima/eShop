@@ -6,20 +6,26 @@ let app = new Vue ({
     el: '#app',
     data: {
         catalogUrl: '/catalogData.json',
+        cartUrl: '/getBasket.json',
+        showCart: false,
+        userSearch: '',
+        imgCart: 'https://placehold.it/50x100',
+        filtered: [],
+        cartItems: [],
         products: [],
-        filtered : [],
-        cartItems : [],
-        imgCatalog: 'http://placehold.it/250x150',
-        showCart : false,
-        cartUrl: 'getBasket.json',
-        userSearch :''
+        imgCatalog: 'https://placehold.it/200x150',
+        errorText : "тестовая ошибка"
     },
     methods: {
         getJson (url) {
             //console.log(url);
             return fetch (url)
-                .then (result => result.json ())
+                .then (result => {
+                    this.$refs.error.setErrorText(this.errorText);
+                    return result.json ()
+                })
                 .catch (error => {
+                    this.$refs.error.setErrorText(error);
                     console.log (error)
                 })
         },
@@ -34,36 +40,50 @@ let app = new Vue ({
                         else{
                             let prod = Object.assign({quantity : 1}, product);
                             this.cartItems.push(prod);
-                            this.showCart = false;
                         }
-
+                        this.showCart = !this.showCart;
                     }
                 });
         },
         deleteProduct (product){
-           console.log(product.id_product);
-            this.showCart = false;
+            this.getJson(`${API}/deleteFromBasket.json`)
+                .then(data => {
+                    if(data.result){
+                        if(product.quantity > 1){
+                            product.quantity--;
+                        } else {
+                            this.cartItems.splice(this.cartItems.indexOf(product), 1);
+                        }
+                        this.showCart = !this.showCart;
+                    }
+                })
         },
-        filterGoods() {
-            const regExp = new RegExp(this.userSearch, 'i');
+        filterGoods(templ) {
+            const regExp = new RegExp(templ, 'i');
             this.filtered = this.products.filter(product => regExp.test(product.product_name))
         }
     },
     mounted () {
-        this.getJson (`${API + this.catalogUrl}`)
-            .then (data => {
-                for (let el of data) {
-                    this.products.push (el);
-                    this.filtered.push (el);
-                }
-
-            });
-        this.getJson (`getProducts.json`)
-            .then (data => {
-                for (let el of data) {
-                    this.products.push (el)
+        this.getJson(`${API + this.cartUrl}`)
+            .then(data => {
+                for(let el of data.contents){
+                    this.cartItems.push(el);
                 }
             });
+        this.getJson(`${API + this.catalogUrl}`)
+            .then(data => {
+                for(let el of data){
+                    this.products.push(el);
+                    this.filtered.push(el);
+                }
+            });
+        /*this.getJson(`getProducts.json`)
+            .then(data => {
+                for(let el of data){
+                    this.products.push(el);
+                    this.filtered.push(el);
+                }
+            });*/
     }
 });
 
