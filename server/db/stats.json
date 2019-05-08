@@ -1,0 +1,17 @@
+[
+    {
+        "action": "add product to cart",
+        "id_product": 457,
+        "product_name": "Gamepad",
+        "price": 3000,
+        "time": "May 08 2019, 1:50:25"
+    },
+    {
+        "action": "delete product from cart",
+        "quantity": 7,
+        "id_product": 129,
+        "product_name": "Notebook",
+        "price": 160000,
+        "time": "May 08 2019, 1:50:25"
+    }
+]

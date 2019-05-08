@@ -27,4 +27,4 @@ Vue.component('cart-item', {
                         <button class="removeButton" @click="$parent.$emit('delete-product', cartItem)">Удалить</button>
                     </div>
                 </div>`
-})
+});

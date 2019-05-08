@@ -1,0 +1,26 @@
+{
+  "name": "eshop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sunnyima/eShop.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sunnyima/eShop/issues"
+  },
+  "homepage": "https://github.com/sunnyima/eShop#readme",
+  "dependencies": {
+    "express": "^4.16.4",
+    "handler": "^0.1.3",
+    "moment": "^2.24.0",
+    "nodemon": "^1.19.0",
+    "touch": "^3.1.0"
+  }
+}
