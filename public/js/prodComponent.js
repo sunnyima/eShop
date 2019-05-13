@@ -21,4 +21,4 @@ Vue.component('product', {
                     <button class="buy-btn" @click="$parent.$emit('add-product', product)">Купить</button>
                 </div>
             </div>`
-})
+});
